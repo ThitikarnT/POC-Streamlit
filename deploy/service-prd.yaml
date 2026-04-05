@@ -1,0 +1,23 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: streamlit-poc
+  annotations:
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/maxScale: '3'
+    spec:
+      serviceAccountName: cr-prod-runtime@prod-app-491718.iam.gserviceaccount.com
+      containers:
+        - image: app
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_TITLE
+              value: Streamlit POC PRD
+            - name: APP_ENV
+              value: prd
