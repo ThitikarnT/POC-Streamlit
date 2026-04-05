@@ -1,0 +1,22 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _CD_REGION: asia-southeast1
+  _DELIVERY_PIPELINE: streamlit-flow-pipeline
+  _IMAGE: replace-me
+  _BRANCH: develop
+
+steps:
+  - id: Create release
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        SAFE_BRANCH=$(echo "${_BRANCH}" | tr '/' '-')
+        gcloud deploy releases create rel-${SAFE_BRANCH}-${BUILD_ID} \
+          --region=${_CD_REGION} \
+          --delivery-pipeline=${_DELIVERY_PIPELINE} \
+          --skaffold-file=skaffold.yaml \
+          --images=app=${_IMAGE}
