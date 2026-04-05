@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: streamlit-flow
+manifests:
+  rawYaml:
+    - deploy/service-uat.yaml
+deploy:
+  cloudrun: {}
+profiles:
+  - name: uat
+    manifests:
+      rawYaml:
+        - deploy/service-uat.yaml
+  - name: prd
+    manifests:
+      rawYaml:
+        - deploy/service-prd.yaml
