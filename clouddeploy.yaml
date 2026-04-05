@@ -1,0 +1,34 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: streamlit-flow-pipeline
+description: GitHub-centric flow for Streamlit POC
+serialPipeline:
+  stages:
+    - targetId: uat
+      profiles: [uat]
+    - targetId: prd
+      profiles: [prd]
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: uat
+description: UAT target
+run:
+  location: projects/nonprd-app/locations/asia-southeast1
+executionConfigs:
+  - usages: [RENDER, DEPLOY]
+    serviceAccount: cd-runner@common-cicd-491718.iam.gserviceaccount.com
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prd
+description: PRD target
+requireApproval: true
+run:
+  location: projects/prod-app-491718/locations/asia-southeast1
+executionConfigs:
+  - usages: [RENDER, DEPLOY]
+    serviceAccount: cd-runner@common-cicd-491718.iam.gserviceaccount.com
