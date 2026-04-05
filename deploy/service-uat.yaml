@@ -1,0 +1,23 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: streamlit-poc
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '0'
+        autoscaling.knative.dev/maxScale: '2'
+    spec:
+      serviceAccountName: cr-nonprd-runtime@nonprd-app.iam.gserviceaccount.com
+      containers:
+        - image: app
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_TITLE
+              value: Streamlit POC UAT
+            - name: APP_ENV
+              value: uat
